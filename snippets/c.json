@@ -1,0 +1,60 @@
+{
+    "C Header Guard": {
+        "prefix": "guard",
+        "body": [
+            "#ifndef ${1:${TM_FILENAME_BASE/(.*)/${1:/upcase}/}_H}",
+            "#define ${1:${TM_FILENAME_BASE/(.*)/${1:/upcase}/}_H}",
+            "",
+            "$0",
+            "",
+            "#endif /* ${1:${TM_FILENAME_BASE/(.*)/${1:/upcase}/}_H} */"
+        ],
+        "description": "Standard C include header guard based on filename"
+    },
+
+    "Embedded Bit Manipulation Macros": {
+        "prefix": "bitops",
+        "body": [
+            "#define BV(x)               (1UL << (x))",
+            "#define SET_BIT(reg, bit)   ((reg) |= BV(bit))",
+            "#define CLR_BIT(reg, bit)   ((reg) &= ~BV(bit))",
+            "#define TGL_BIT(reg, bit)   ((reg) ^= BV(bit))",
+            "#define READ_BIT(reg, bit)  (((reg) >> (bit)) & 1UL)",
+            "$0"
+        ],
+        "description": "Common bitwise operations for registers"
+    },
+
+    "Bare Metal Main Skeleton": {
+        "prefix": "mcu_main",
+        "body": [
+            "#include <stdint.h>",
+            "#include <stdbool.h>",
+            "",
+            "static void hardware_init(void) {",
+            "    $0",
+            "}",
+            "",
+            "int main(void) {",
+            "    hardware_init();",
+            "",
+            "    while (1) {",
+            "        /* Super-loop */",
+            "    }",
+            "",
+            "    return 0;",
+            "}"
+        ],
+        "description": "Bare-metal microcontroller main super-loop"
+    },
+
+    "Hardware Register Definition": {
+        "prefix": "regdef",
+        "body": [
+            "#define ${1:REG_NAME}_BASE     (${2:0x40000000UL})",
+            "#define ${1:REG_NAME}          (*(volatile uint32_t *)(${1:REG_NAME}_BASE + ${3:0x00UL}))",
+            "$0"
+        ],
+        "description": "Volatile memory-mapped I/O register pointer"
+    }
+}

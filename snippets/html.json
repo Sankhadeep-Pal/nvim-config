@@ -1,0 +1,54 @@
+{
+    "HTML5 Boilerplate": {
+        "prefix": "!",
+        "body": [
+            "<!DOCTYPE html>",
+            "<html lang=\"en\">",
+            "<head>",
+            "    <meta charset=\"UTF-8\">",
+            "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
+            "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">",
+            "    <title>${1:Document}</title>",
+            "    <link rel=\"stylesheet\" href=\"${2:style.css}\">",
+            "</head>",
+            "<body>",
+            "    $0",
+            "    <script src=\"${3:app.js}\"></script>",
+            "</body>",
+            "</html>"
+        ],
+        "description": "HTML5 Starter Template"
+    },
+
+    "HTML Link Tag": {
+        "prefix": "link:css",
+        "body": [
+            "<link rel=\"stylesheet\" href=\"${1:style.css}\">"
+        ],
+        "description": "Stylesheet Link"
+    },
+
+    "HTML Script Tag": {
+        "prefix": "script:src",
+        "body": [
+            "<script src=\"${1:app.js}\"></script>"
+        ],
+        "description": "External Script Tag"
+    },
+
+    "EJS Output": {
+        "prefix": "ejs=",
+        "body": [
+            "<%= ${1:variable} %>"
+        ],
+        "description": "EJS Evaluated Output Tag"
+    },
+
+    "EJS Scriptlet": {
+        "prefix": "ejs%",
+        "body": [
+            "<% ${1:/* code */} %>"
+        ],
+        "description": "EJS Control Flow Tag"
+    }
+}
