@@ -18,6 +18,20 @@ return {
         cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
         cmp.setup({
+            sorting = {
+                priority_weight = 2,
+                comparators = {
+                    cmp.config.compare.recently_used, -- Puts recently selected items higher
+                    cmp.config.compare.offset,
+                    cmp.config.compare.exact,
+                    cmp.config.compare.score,
+                    cmp.config.compare.locality,
+                    cmp.config.compare.kind,
+                    cmp.config.compare.sort_text,
+                    cmp.config.compare.length,
+                    cmp.config.compare.order,
+                },
+            },
             snippet = {
                 expand = function(args)
                     luasnip.lsp_expand(args.body)
@@ -83,8 +97,8 @@ return {
                     vim_item.menu = ({
                         path = "[Path]",
                         -- nvim_lsp = "[LSP]",
-                        buffer = "[Buf]",
-                        luasnip = "[Snip]",
+                        -- buffer = "[Buf]",
+                        -- luasnip = "[Snip]",
                     })[entry.source.name]
 
                     -- Remove duplicate symbol clutter in label

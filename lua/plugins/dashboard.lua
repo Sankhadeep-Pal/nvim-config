@@ -21,7 +21,7 @@ return {
 ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ 
                 ]],
                 keys = {
-                    -- { icon = " ", key = "f", desc = "Find File", action = ":Oil" },
+                    { icon = "󰉋 ", key = "e", desc = "File Explorer", action = ":Oil" },
                     { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
                     {
                         icon = "󰞍 ",
@@ -32,7 +32,7 @@ return {
                             vim.cmd("ToggleTerm")
                         end,
                     },
-                    { icon = "󱌢 ", key = "m", desc = "Mason Packages", action = ":Mason" },
+                    -- { icon = "󱌢 ", key = "m", desc = "Mason Packages", action = ":Mason" },
                     { icon = "󰒲 ", key = "l", desc = "Lazy Plugins", action = ":Lazy" },
                     { icon = " ", key = "q", desc = "Quit Neovim", action = ":qa" },
                 },

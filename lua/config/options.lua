@@ -13,6 +13,7 @@ vim.opt.showcmd = true
 vim.opt.showcmdloc = "statusline"
 vim.opt.laststatus = 3
 vim.opt.cmdheight = 0
+vim.opt.updatetime = 250
 
 -- Tabs & Indentation (4-space standard)
 opt.tabstop = 4
