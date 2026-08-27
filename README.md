@@ -2,6 +2,8 @@
 
 A clean, blazing-fast, and modern Neovim setup built with **Lua** and **Lazy.nvim**, tailored for low-level systems programming (C, C++, Rust, Assembly) and general software development.
 
+New to Vim? Checkout [Vim Motion](./assets/Vim_lesson.txt)
+
 ---
 
 ## 📸 Screenshots
