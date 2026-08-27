@@ -1,0 +1,219 @@
+Hello World!
+My name is Sankhadeep Pal.
+Today I started to learn vim keyBindings.
+
+    77 basic commands.... Completed on
+    Intermediate level Done... Top 100 command learned!
+
+Vim KeyBindings:
+
+0. ESC - Any mode to vim normal mode.
+
+1. By Default - Vim normal mode.
+
+2. : - Vim Command mode.
+
+3. i - Insert before cursor.
+
+4. a - Insert after cursor.
+
+5. o - Insert in a new line below cursor.
+
+6. I - Insert at the beginning of the line.
+
+7. A - Insert at the end of the line.
+
+8. O - Insert in a new line above cursor.
+
+9. v - Vim visual mode.
+
+10. h - Navigate left.
+
+11. j - Navigate down.
+
+12. k - Navigate up.
+
+13. l - Navigate right.
+
+14. r - Replace a character.
+
+15. y - Copy the selected text.
+
+16. p - Paste the copied text into new line.
+
+17. w - Jump word forward (every first character). Punctuation mark included.
+
+18. b - Jump word backward. Punctuation mark included.
+
+19. W - Jump word forward (every first character). Punctuation mark excluded.
+
+20. B - Jump word backward. Punctuation mark excluded.
+
+21. c - Delete the selected text & activate insert mode.
+
+22. d - Delete the selected text.
+
+23. :w - Write the file.
+
+24. :q - Quit the file (When no change applied).
+
+25. :q! - Discard changes & quit.
+
+26. :wq - Write changes & quit.
+
+27. <number>h - Cursor goes that many numbers of character to left.
+
+28. <number>j - Cursor goes that many numbers of character to down.
+
+29. <number>k - Cursor goes that many numbers of character to up.
+
+30. <number>l - Cursor goes that many numbers of character to right.
+
+31. u - Undo to last change.
+
+32. CTRL+r - Redo to newer change.
+
+33. <number>u - Undo to that many previous changes.
+
+34. dd - Delete the line on which the cursor is placed.
+
+35. cc - Delete the line on which the cursor is placed & activates the insert mode.
+
+36. yy - Copy the line on which the cursor is placed.
+
+37. <number>p - Paste copied text that many times.
+
+38. P - Paste before the cursor.
+
+39. <number>P - Paste copied text before cursor that many times.
+
+40. e - Jump word forward (every last character). Punctuation mark included.
+
+41. E - Jump word forward (every last character). Punctuation mark excluded.
+
+42. zz - scroll the screen to make the cursor in the middle of the screen.
+
+43. D - Delete the rest of line after the cursor.
+
+44. C - Delete the rest of the line after the cursor & enter the insert mode.
+
+45. dw - Delete the remaining part of the word... on which the cursor remains.
+
+46. d<number>w - Delete the remaining part of the word... on which the cursor remains & also delete (number-1) words after that.
+
+47. 0 - Goes to the beginning of the line.
+
+48. $ - Goes to the end of the line.
+
+49. d0 - Delete everything between cursor & start of the line.
+                d$ and D can do the same job.
+
+50. c0 - Delete everything between cursor & start of the line & enter insert mode.
+
+51. c$ - Delete everything between cursor & end of the line & enter insert mode.
+
+52. yiw - Copy the word on which the cursor remains.
+
+53. di<pair of non-character> - Delete the words between those pair of non character word. like: b/w -> {},[],(),"" etc.
+
+54. ci<pair of non-character> - Delete the words between those pair of non character word. like: b/w -> {},[],(),"" etc & enter insert mode.
+
+55. <number>yy - Copy that many lines after the cursor.
+
+56. % - Jumps between the pair of non-characters. like: b/w -> {},[],(),"" etc.
+
+57. t<non-character> - Jumps before the first similar non character after the cursor. like: *, #, ; etc.
+
+58. f<non-character> - Jumps to the first similar non character after the cursor. like: *, #, ; etc.
+
+59. d% - Delete between those paired non-characters including them.
+
+60. c% - Delete between those paired non-characters including them & enter insert mode.
+
+61. dt<non-character> - Delete between the cursor & before the first similar non character after the cursor. like: *, #, ; etc.
+
+62. df<non-character> Delete between the cursor and to the first similar non character after the cursor. like: *, #, ; etc.
+
+63. ct<non-character> - Delete between the cursor & before the first similar non character after the cursor. like: *, #, ; etc & enter insert mode.
+
+64. cf<non-character> - Delete between the cursor and to the first similar non character after the cursor. like: *, #, ; etc & enter insert mode.
+
+65. T<non-character> - Jumps before the first similar non character before the cursor. like: *, #, ; etc.
+
+66. F<non-character> - Jumps to the first similar non character before the cursor. like: *, #, ; etc.
+
+67. dT<non-character> - Delete between the cursor & before the first similar non character before the cursor. like: *, #, ; etc.
+
+68. dF<non-character> Delete between the cursor and to the first similar non character before the cursor. like: *, #, ; etc.
+
+69. cT<non-character> - Delete between the cursor & before the first similar non character before the cursor. like: *, #, ; etc & enter insert mode.
+
+70. cF<non-character> - Delete between the cursor and to the first similar non character before the cursor. like: *, #, ; etc & enter insert mode.
+
+71. yt<non-character> - copy the text between the cursor and the before first similar non character after the cursor. like: *, #, ; etc & enter insert mode.
+
+72. yf<non-character> - copy the text between the cursor and to the first similar non character after the cursor. like: *, #, ; etc & enter insert mode.
+
+73. yT<non-character> - copy the text between the cursor and the before first similar non character before the cursor. like: *, #, ; etc & enter insert mode.
+
+74. yF<non-character> - copy the text between the cursor and to the first similar non character before the cursor. like: *, #, ; etc & enter insert mode.
+
+75. gg - Jump The beginning of the file.
+
+76. G - Jump The end of the file.
+
+77. <number>G - Jumps to that line number.
+    :<number> - Jumps to that line number.
+
+------------------------------------------------------Intermediate--------------------------------------------------------------------
+
+78. << - Cancels the Indentation.
+
+79. >> - Creates a tab width of Indentation.
+
+80. = - creates the proper indentation overwriting the existing.
+
+81. == - creates the proper indentation overwriting the existing for a line.
+
+82. gg=G - corrects the indentations for a whole file.
+
+83. x - Deletes the characters of the right of the cursor one by one.
+    vd - Deletes the characters of the right of the cursor one by one.
+
+84. ESC+l+a - If the cursor is in insert mode, then this command make the cursor jump one character right. 
+
+85. V - Visual line mode.
+
+86. ctrl+v - Visual block mode.
+
+87. R - Set to replace mode, after the replacing the cursor moves to right & stays in replace mode to change that.
+
+88. /<string> - Search for that particular string in the whole file.
+
+    89. n - If /<string> is activated then it helps to jump forward the next match.
+
+    90. N - If /<string> is activated then it helps to jump backward the next match.
+
+91. ?<string> - Search for that particular string in the whole file. But, opposite of /<string> command.
+
+    92. n - If ?<string> is activated then it helps to jump backward the next match.
+
+    93. N - If ?<string> is activated then it helps to jump forward the next match.
+
+94. # - Jumps backward to the same word on that the cursor is staying.
+
+95. * - Jumps forward to the same word on that the cursor is staying.
+
+96. m<character> - If we visit a place quiet often then we can mark that place with a character.
+
+    97. '<same-character> - To jump to that part from anywhere in the file.
+
+98. :%s/<old-string>/<new-string>/g - Change the old string to new string in the full file.
+
+99. :s/<old-string>/<new-string>/g - Change the old string to new string in the selected area.
+
+100. . - Repeat the last command again.
+
+101. x = deletes the characters of the right of the cursor one by one.
+
+102. X = Deletes the characters of the left of the cursor one by one.
