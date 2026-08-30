@@ -35,15 +35,15 @@ New to Vim? Checkout [Vim Motion](./assets/Vim_lesson.txt)
 
 - **Package Management:** Powered by [lazy.nvim](https://github.com/folke/lazy.nvim) for rapid, on-demand plugin loading.
 - **Language Server Protocol (LSP):** Native Neovim 0.11+ LSP integration with [Mason](https://github.com/williamboman/mason.nvim) for seamless language server management (`clangd`, `rust-analyzer`, `gopls`, `lua_ls`, etc.).
-- **Automated Code Intelligence:** Context-aware hover diagnostics and insert-mode signature help for navigating complex C/C++ APIs, styled with custom rounded borders.
+- **Silent Code Intelligence:** Custom asynchronous LSP hover handler that silently drops empty API requests, preventing UI bloat while parsing C/C++ memory addresses.
+- **Minimalist Status:** Zero-distraction background LSP tracking using [fidget.nvim](https://github.com/j-hui/fidget.nvim).
 - **Fuzzy Finding:** Deep project navigation, grep searching, and visual LSP menus powered by [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim).
-- **Rapid Context Switching:** Instant, keystroke-free jumping between active workbench files using [harpoon 2](https://github.com/ThePrimeagen/harpoon).
+- **Rapid Context Switching:** Instant, dynamic keystroke jumping between active workbench files using [harpoon 2](https://github.com/ThePrimeagen/harpoon) with auto-updating file names.
 - **Syntax & Parsing:** Advanced syntax highlighting, indentation, and sticky context via [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter).
 - **Buffer & Status Line:** Pinned global statusline with [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) and clickable tabs via [bufferline.nvim](https://github.com/akinsho/bufferline.nvim).
 - **File Management:** Minimal buffer-like filesystem navigation using [oil.nvim](https://github.com/stevearc/oil.nvim).
 - **Embedded Terminal & Git:** Floating and split terminal management with [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim), natively supporting tokenless GitHub CLI (`gh`) authentication.
-- **Interactive Helper:** Command discovery and keymap menu via [which-key.nvim](https://github.com/folke/which-key.nvim).
-- **Autocomplete & Snippets:** Intelligent completion using [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) and [LuaSnip](https://github.com/L3MON4D3/LuaSnip).
+- **Autocomplete & Snippets:** Lightning-fast, C-optimized intelligent completion using [blink.cmp](https://github.com/Saghen/blink.cmp) and [LuaSnip](https://github.com/L3MON4D3/LuaSnip).
 - **Theme:** Minimal and high-contrast [Catppuccin](https://github.com/catppuccin/nvim).
 
 ---
@@ -61,16 +61,17 @@ New to Vim? Checkout [Vim Motion](./assets/Vim_lesson.txt)
         └── plugins/
             ├── autoPairs.lua    # Automatic bracket/quote closing
             ├── bufferLine.lua   # Buffer tabs and click actions
-            ├── completion.lua   # nvim-cmp autocompletion engine
+            ├── completion.lua   # blink.cmp autocompletion engine
             ├── dashboard.lua    # Startup dashboard (snacks.nvim)
             ├── fileManager.lua  # Oil.nvim file manager
             ├── formatting.lua   # Code formatting integration
             ├── functionLine.lua # Scope lines & sticky context
             ├── harpoon.lua      # Harpoon 2 rapid file switching
             ├── icon.lua         # Mini.icons / devicons
-            ├── lsp.lua          # Native LSP configurations, auto-hovers & keymaps
+            ├── lsp.lua          # Native LSP configurations, custom silent auto-hovers
             ├── luaLine.lua      # Pinned global statusline & showcmd
             ├── mason.lua        # LSP, Linter & Formatter installer
+            ├── notification.lua # Minimal Fidget UI tracking
             ├── snippets.lua     # Snippet expansion engine
             ├── telescope.lua    # Fuzzy finder & LSP UI integration
             ├── terminal.lua     # ToggleTerm configuration
@@ -127,7 +128,7 @@ New to Vim? Checkout [Vim Motion](./assets/Vim_lesson.txt)
 
 _The leader key is mapped to `Space`._
 
-### Core & Navigation
+**Core & Navigation**
 
 | Key                | Action                    |
 | :----------------- | :------------------------ |
@@ -137,7 +138,7 @@ _The leader key is mapped to `Space`._
 | `<leader>x`        | Close Current Buffer      |
 | `<C-/>` or `<C-_>` | Toggle Line Comment       |
 
-### Telescope (Search & Find)
+**Telescope (Search & Find)**
 
 | Key          | Action                             |
 | :----------- | :--------------------------------- |
@@ -147,18 +148,19 @@ _The leader key is mapped to `Space`._
 | `<leader>sr` | Recent Files                       |
 | `<leader>sz` | Fuzzy Find in Current Buffer       |
 
-### Harpoon (Rapid Workbench)
+**Harpoon (Rapid Workbench)**
 
-| Key         | Action                      |
-| :---------- | :-------------------------- |
-| `<leader>a` | Add Current File to Harpoon |
-| `<C-e>`     | Toggle Harpoon Quick Menu   |
-| `<C-h>`     | Jump to Harpoon File 1      |
-| `<C-t>`     | Jump to Harpoon File 2      |
-| `<C-n>`     | Jump to Harpoon File 3      |
-| `<C-s>`     | Jump to Harpoon File 4      |
+| Key          | Action                      |
+| :----------- | :-------------------------- |
+| `<leader>a`  | Add Current File to Harpoon |
+| `<C-e>`      | Toggle Harpoon Quick Menu   |
+| `<leader>h1` | Jump to Harpoon File 1      |
+| `<leader>h2` | Jump to Harpoon File 2      |
+| `<leader>h3` | Jump to Harpoon File 3      |
+| `<leader>h4` | Jump to Harpoon File 4      |
+| `<leader>h5` | Jump to Harpoon File 5      |
 
-### LSP & Code Intelligence (Telescope Powered)
+**LSP & Code Intelligence (Telescope Powered)**
 
 | Key          | Action                           |
 | :----------- | :------------------------------- |
@@ -174,7 +176,7 @@ _The leader key is mapped to `Space`._
 | `<leader>d`  | Open Line Diagnostics (Manual)   |
 | `[d` / `]d`  | Previous / Next Diagnostic       |
 
-### Terminal & Tools
+**Terminal & Tools**
 
 | Key          | Action                              |
 | :----------- | :---------------------------------- |
@@ -182,5 +184,3 @@ _The leader key is mapped to `Space`._
 | `<leader>th` | Toggle Horizontal Terminal          |
 | `<leader>tv` | Toggle Vertical Terminal            |
 | `<leader>s`  | Spell Suggestions & Dictionary Menu |
-
----

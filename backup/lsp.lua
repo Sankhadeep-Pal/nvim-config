@@ -3,12 +3,10 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
         "williamboman/mason.nvim",
-        -- Removed: "hrsh7th/cmp-nvim-lsp"
+        "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
-        -- Switched to blink.cmp capabilities
-        local capabilities = require("blink.cmp").get_lsp_capabilities()
-
+        local capabilities = require("cmp_nvim_lsp").default_capabilities()
         -- Keymaps attached whenever an LSP connects to a buffer
         vim.api.nvim_create_autocmd("LspAttach", {
             group = vim.api.nvim_create_augroup("UserLspConfig", {}),
@@ -16,29 +14,27 @@ return {
                 local map = function(keys, func, desc)
                     vim.keymap.set("n", keys, func, { buffer = ev.buf, desc = "LSP: " .. desc })
                 end
-
                 -- Navigation & Definitions
                 map("gd", vim.lsp.buf.definition, "Go to Definition")
                 map("gD", vim.lsp.buf.declaration, "Go to Declaration")
                 map("gi", vim.lsp.buf.implementation, "Go to Implementation")
                 map("gr", vim.lsp.buf.references, "Find References")
-
+                -- map("K", vim.lsp.buf.hover, "Hover Documentation")
+                -- map("<C-k>", vim.lsp.buf.signature_help, "Signature Help")
                 -- Actions & Diagnostics
                 map("<leader>ca", vim.lsp.buf.code_action, "Code Action")
                 map("<leader>rn", vim.lsp.buf.rename, "Rename Symbol")
+                -- map("<leader>d", vim.diagnostic.open_float, "Show Line Diagnostics")
                 map("[d", vim.diagnostic.goto_prev, "Previous Diagnostic")
                 map("]d", vim.diagnostic.goto_next, "Next Diagnostic")
-
-                -- Automatically show diagnostics on hover
+                -- NEW: Automatically show diagnostics on hover
                 vim.api.nvim_create_autocmd("CursorHold", {
                     buffer = ev.buf,
                     callback = function()
                         -- Get current line number (Neovim API uses 0-indexed lines)
                         local line = vim.api.nvim_win_get_cursor(0)[1] - 1
-
                         -- Check for any diagnostics (errors/warnings) on the current line
                         local diagnostics = vim.diagnostic.get(ev.buf, { lnum = line })
-
                         if #diagnostics > 0 then
                             -- If errors exist, show the diagnostic window
                             vim.diagnostic.open_float(nil, {
@@ -52,48 +48,12 @@ return {
                         else
                             -- No errors? Silently try to show documentation instead
                             if vim.bo[ev.buf].filetype ~= "lua" then
-                                -- 1. Retrieve the active LSP clients attached to this specific buffer
-                                local clients = vim.lsp.get_clients({ bufnr = ev.buf })
-                                if #clients == 0 then
-                                    return
-                                end
-
-                                -- 2. Extract the exact offset encoding from the first connected client
-                                local offset_encoding = clients[1].offset_encoding
-
-                                -- 3. Pass window ID (0) and the encoding to satisfy the strict API
-                                local params = vim.lsp.util.make_position_params(0, offset_encoding)
-
-                                vim.lsp.buf_request(
-                                    ev.buf,
-                                    "textDocument/hover",
-                                    params,
-                                    function(err, result, ctx, config)
-                                        -- Fail silently if the compiler has no documentation to provide
-                                        if err or not (result and result.contents) then
-                                            return
-                                        end
-
-                                        local markdown_lines =
-                                            vim.lsp.util.convert_input_to_markdown_lines(result.contents)
-                                        markdown_lines = vim.lsp.util.trim_empty_lines(markdown_lines)
-
-                                        if vim.tbl_isempty(markdown_lines) then
-                                            return
-                                        end
-
-                                        -- Draw the floating window only if valid documentation exists
-                                        config = config or {}
-                                        config.border = "rounded"
-                                        vim.lsp.util.open_floating_preview(markdown_lines, "markdown", config)
-                                    end
-                                )
+                                pcall(vim.lsp.buf.hover, { border = "rounded" })
                             end
                         end
                     end,
                 })
-
-                -- Automatically show signature help in Insert mode
+                -- NEW: Automatically show signature help in Insert mode
                 vim.api.nvim_create_autocmd("CursorHoldI", {
                     buffer = ev.buf,
                     callback = function()
@@ -102,24 +62,9 @@ return {
                 })
             end,
         })
-
-        vim.lsp.handlers["textDocument/hover"] = function(_, result, ctx, config)
-            config = config or {}
-            config.focus_id = ctx.method
-            config.border = config.border or "rounded"
-            if not (result and result.contents) then
-                return
-            end
-            local markdown_lines = vim.lsp.util.convert_input_to_markdown_lines(result.contents)
-            markdown_lines = vim.lsp.util.trim_empty_lines(markdown_lines)
-            if vim.tbl_isempty(markdown_lines) then
-                return
-            end
-            return vim.lsp.util.open_floating_preview(markdown_lines, "markdown", config)
-        end
+        vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
         vim.lsp.handlers["textDocument/signatureHelp"] =
             vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
-
         -- Server configurations
         local servers = {
             clangd = {
@@ -146,10 +91,8 @@ return {
                 },
             },
         }
-
         for server, config in pairs(servers) do
             config.capabilities = capabilities
-
             if vim.lsp.config and vim.lsp.enable then
                 -- Native Neovim 0.11+ API
                 vim.lsp.config[server] = config

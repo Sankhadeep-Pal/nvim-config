@@ -18,21 +18,28 @@ return {
             harpoon.ui:toggle_quick_menu(harpoon:list())
         end, { desc = "Harpoon menu" })
 
-        -- Instantly jump to files 1 through 4 (using home row keys)
-        vim.keymap.set("n", "<leader>h1", function()
-            harpoon:list():select(1)
-        end, { desc = "Harpoon jump 1" })
-        vim.keymap.set("n", "<leader>h2", function()
-            harpoon:list():select(2)
-        end, { desc = "Harpoon jump 2" })
-        vim.keymap.set("n", "<leader>h3", function()
-            harpoon:list():select(3)
-        end, { desc = "Harpoon jump 3" })
-        vim.keymap.set("n", "<leader>h4", function()
-            harpoon:list():select(4)
-        end, { desc = "Harpoon jump 4" })
-        vim.keymap.set("n", "<leader>h5", function()
-            harpoon:list():select(5)
-        end, { desc = "Harpoon jump 5" })
+        -- Dynamic Keymap Generator
+        local function refresh_harpoon_keymaps()
+            for i = 1, 9 do
+                local item = harpoon:list():get(i)
+                -- Extract just the filename from the path, or default to "Empty"
+                local filename = item and vim.fn.fnamemodify(item.value, ":t") or "Empty"
+
+                vim.keymap.set("n", "<leader>h" .. i, function()
+                    harpoon:list():select(i)
+                    -- end, { desc = "Harpoon " .. i .. ": " .. filename })
+                end, { desc = filename })
+            end
+        end
+
+        -- 1. Run once on startup to set initial blank keymaps
+        refresh_harpoon_keymaps()
+
+        -- 2. Hook into Harpoon's internal event bus to overwrite the descriptions dynamically
+        harpoon:extend({
+            ADD = refresh_harpoon_keymaps,
+            REMOVE = refresh_harpoon_keymaps,
+            REORDER = refresh_harpoon_keymaps,
+        })
     end,
 }

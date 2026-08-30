@@ -1,116 +1,79 @@
 return {
-    "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
+    "saghen/blink.cmp",
+    version = "*", -- Automatically downloads the pre-built Rust binary
     dependencies = {
-        "hrsh7th/cmp-nvim-lsp",
-        "hrsh7th/cmp-buffer",
-        "hrsh7th/cmp-path",
-        "saadparwaiz1/cmp_luasnip",
-        "onsails/lspkind.nvim",
+        "L3MON4D3/LuaSnip", -- We keep this for your custom snippets
     },
-    config = function()
-        local cmp = require("cmp")
-        local luasnip = require("luasnip")
-        local lspkind = require("lspkind")
+    opts = {
+        fuzzy = {
+            -- "score" automatically calculates exact match, locality, and your usage history
+            sorts = { "score", "sort_text" },
+        },
+        -- Tell blink to use your LuaSnip engine
+        snippets = { preset = "luasnip" },
 
-        -- Auto-insert brackets on function confirm
-        local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-        cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+        -- 1:1 mapping translation from your nvim-cmp setup
+        keymap = {
+            preset = "none",
+            ["<C-j>"] = { "select_next", "fallback" },
+            ["<C-k>"] = { "select_prev", "fallback" },
+            ["<C-b>"] = { "scroll_documentation_up", "fallback" },
+            ["<C-f>"] = { "scroll_documentation_down", "fallback" },
+            ["<C-Space>"] = { "show", "show_documentation", "hide_documentation" },
+            ["<C-e>"] = { "hide" },
+            ["<CR>"] = { "accept", "fallback" },
+            ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
+            ["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
+        },
 
-        cmp.setup({
-            sorting = {
-                priority_weight = 2,
-                comparators = {
-                    cmp.config.compare.recently_used, -- Puts recently selected items higher
-                    cmp.config.compare.offset,
-                    cmp.config.compare.exact,
-                    cmp.config.compare.score,
-                    cmp.config.compare.locality,
-                    cmp.config.compare.kind,
-                    cmp.config.compare.sort_text,
-                    cmp.config.compare.length,
-                    cmp.config.compare.order,
+        appearance = {
+            -- Blink natively supports Nerd Font icons
+            use_nvim_cmp_as_default = false,
+            nerd_font_variant = "mono",
+        },
+
+        completion = {
+            accept = {
+                -- This entirely replaces your nvim-autopairs hook
+                auto_brackets = { enabled = true },
+            },
+            menu = {
+                border = "rounded",
+                draw = {
+                    -- Separate the core label from the dimmed details into columns
+                    columns = {
+                        { "kind_icon" }, -- Col 1
+                        { "label" }, -- Col 2 (Modified to hide parameters)
+                        { "label_detail", gap = 1 }, -- Col 3 (Parameters, Dimmed)
+                    },
+                    components = {
+                        -- This is the crucial part: Force the main label to ONLY show the core name
+                        label = {
+                            text = function(ctx)
+                                return ctx.label
+                            end, -- Only use ctx.label, not label + detail
+                            highlight = "CmpItemAbbr", -- Normal function name color
+                        },
+                        -- Dim the parameter list in the separate column
+                        label_detail = {
+                            text = function(ctx)
+                                return ctx.label_detail
+                            end,
+                            highlight = "Comment", -- Use dimmed 'Comment' color for right column
+                        },
+                    },
                 },
             },
-            snippet = {
-                expand = function(args)
-                    luasnip.lsp_expand(args.body)
-                end,
+            documentation = {
+                auto_show = false,
+                auto_show_delay_ms = 200,
+                window = { border = "rounded" },
             },
-            window = {
-                completion = cmp.config.window.bordered({
-                    border = "rounded",
-                    winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:Visual,Search:None",
-                }),
-                documentation = cmp.config.window.bordered({
-                    border = "rounded",
-                    winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:Visual,Search:None",
-                }),
-            },
-            mapping = cmp.mapping.preset.insert({
-                ["<C-j>"] = cmp.mapping.select_next_item(),
-                ["<C-k>"] = cmp.mapping.select_prev_item(),
-                ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-                ["<C-f>"] = cmp.mapping.scroll_docs(4),
-                ["<C-Space>"] = cmp.mapping.complete(),
-                ["<C-e>"] = cmp.mapping.abort(),
-                ["<CR>"] = cmp.mapping.confirm({ select = true }),
-                ["<Tab>"] = cmp.mapping(function(fallback)
-                    if cmp.visible() then
-                        cmp.select_next_item()
-                    elseif luasnip.expand_or_jumpable() then
-                        luasnip.expand_or_jump()
-                    else
-                        fallback()
-                    end
-                end, { "i", "s" }),
-                ["<S-Tab>"] = cmp.mapping(function(fallback)
-                    if cmp.visible() then
-                        cmp.select_prev_item()
-                    elseif luasnip.jumpable(-1) then
-                        luasnip.jump(-1)
-                    else
-                        fallback()
-                    end
-                end, { "i", "s" }),
-            }),
+        },
 
-            -- Group & limit sources to prevent clutter
-            sources = cmp.config.sources({
-                { name = "nvim_lsp", max_item_count = 15, priority = 1000 },
-                { name = "luasnip", max_item_count = 3, priority = 500 },
-                { name = "path", max_item_count = 5, priority = 250 },
-            }, {
-                { name = "buffer", max_item_count = 5, priority = 100, keyword_length = 3 },
-            }),
-
-            formatting = {
-                format = function(entry, vim_item)
-                    -- Apply lspkind icons
-                    vim_item = lspkind.cmp_format({
-                        mode = "symbol_text",
-                        maxwidth = 40,
-                        ellipsis_char = "...",
-                    })(entry, vim_item)
-
-                    -- Source label tag
-                    vim_item.menu = ({
-                        path = "[Path]",
-                        -- nvim_lsp = "[LSP]",
-                        -- buffer = "[Buf]",
-                        -- luasnip = "[Snip]",
-                    })[entry.source.name]
-
-                    -- Remove duplicate symbol clutter in label
-                    vim_item.dup = ({
-                        nvim_lsp = 0,
-                        luasnip = 0,
-                        buffer = 0,
-                    })[entry.source.name] or 0
-
-                    return vim_item
-                end,
-            },
-        })
-    end,
+        sources = {
+            -- Blink handles the grouping and priority natively and async
+            default = { "lsp", "path", "snippets", "buffer" },
+        },
+    },
 }
